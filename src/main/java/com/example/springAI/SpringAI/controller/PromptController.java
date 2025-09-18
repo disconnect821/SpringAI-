@@ -1,30 +1,27 @@
 package com.example.springAI.SpringAI.controller;
 
-import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.springAI.SpringAI.controller.chatResponse.ChatResponse;
+import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.chat.prompt.PromptTemplate;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api")
 public class PromptController {
 
-//    private OpenAiChatModel openAiChatModel;
-//
-//    public PromptController(OpenAiChatModel openAiChatModel){
-//        this.openAiChatModel = openAiChatModel;
-//    }
+    private final ChatResponse chatResponse;
 
-    private final ChatClient chatClient;
-
-    public PromptController(ChatClient.Builder chatClientBuilder){
-        this.chatClient = chatClientBuilder.build();
+    public PromptController(ChatResponse chatResponse) {
+        this.chatResponse = chatResponse;
     }
 
-    @GetMapping("/api/{prompt}")
-    public String getAnswer(@PathVariable String prompt){
-        return chatClient.prompt()
-                .user(prompt)
-                .call()
-                .content();
+    @GetMapping({"prompt/{userPrompt}"})
+    public String getPromptAnswer(@PathVariable String userPrompt){
+        String template = chatResponse.generatePromptFromModel(userPrompt);
+        System.out.println(template);
+        PromptTemplate promptTemplate = new PromptTemplate(template);
+        Prompt prompt = promptTemplate.create();
+
+        return chatResponse.getResponse(prompt);
     }
 }
