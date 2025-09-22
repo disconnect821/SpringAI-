@@ -34,4 +34,14 @@ public class ChatResponse {
                 .call()
                 .content();
     }
+
+    // System prompt is basically used to define rules, behaviour or identity to generate the accurate and expected results.
+//    public String generatePromptFromModelWithSystemPrompt(String prompt){
+//        return chatClient
+//                .prompt()
+//                .user(prompt)
+//                .system("As a assitant | You are a java developer | Think like a designer")
+//                .call()
+//                .content();
+//    }
 }
