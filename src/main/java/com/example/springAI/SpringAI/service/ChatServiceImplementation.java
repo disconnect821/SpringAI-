@@ -1,12 +1,13 @@
 package com.example.springAI.SpringAI.service;
 
-import com.example.springAI.SpringAI.controller.chatResponse.ChatResponse;
+import com.example.springAI.SpringAI.chatResponse.ChatResponse;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.chat.prompt.SystemPromptTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 
 import java.util.Map;
 @Component
@@ -55,5 +56,9 @@ public class ChatServiceImplementation  implements  ChatService{
 
     }
 
+    //Generating Streams
 
+    public Flux<String> generateResponseInStream(String query) {
+        return chatResponse.streamResponse(query);
+    }
 }

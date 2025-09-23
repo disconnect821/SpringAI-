@@ -1,10 +1,11 @@
 package com.example.springAI.SpringAI.controller;
 
-import com.example.springAI.SpringAI.controller.chatResponse.ChatResponse;
+import com.example.springAI.SpringAI.chatResponse.ChatResponse;
 import com.example.springAI.SpringAI.service.ChatServiceImplementation;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 
 @RestController
 @RequestMapping("/api")
@@ -35,5 +36,9 @@ public class PromptController {
     @GetMapping({"SystemAndPromptTemplate"})
     public String getSystemAndPromptTemplateResponse(){
         return chatServiceImplementation.generateContentUsingSystemPromptTemplate();
+    }
+    @GetMapping({"stream-chat"})
+    public Flux<String> getStreamChat(@RequestParam String query){
+        return chatServiceImplementation.generateResponseInStream(query);
     }
 }

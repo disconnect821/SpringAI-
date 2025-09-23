@@ -1,4 +1,4 @@
-package com.example.springAI.SpringAI.controller.chatResponse;
+package com.example.springAI.SpringAI.chatResponse;
 
 import com.example.springAI.SpringAI.chatClientConfig.ChatClientConfig;
 import org.springframework.ai.chat.client.ChatClient;
@@ -8,7 +8,10 @@ import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 
 @Component
 public class ChatResponse {
@@ -32,6 +35,10 @@ public class ChatResponse {
 
     private final ChatClient chatClient;
 
+    //Fetching system message to avoid hardcoding
+    @Value("classpath:/prompts/system-message.st")
+    private Resource systemMessage;
+
     public ChatResponse(ChatClient chatClient){
         this.chatClient = chatClient;
     }
@@ -50,6 +57,7 @@ public class ChatResponse {
                 .content();
     }
 
+
     //System prompt is basically used to define rules, behaviour or identity to generate the accurate and expected results.
 //    public String generatePromptFromModelWithSystemPrompt(String prompt){
 //        return chatClient
@@ -59,4 +67,13 @@ public class ChatResponse {
 //                .call()
 //                .content();
 //    }
+
+    public Flux<String> streamResponse(String query) {
+        return chatClient
+                .prompt()
+                .system(system -> system.text(systemMessage).param("version",8))
+                .user(query)
+                .stream()
+                .content();
+    }
 }
