@@ -1,6 +1,7 @@
 package com.example.springAI.SpringAI.controller;
 
 import com.example.springAI.SpringAI.controller.chatResponse.ChatResponse;
+import com.example.springAI.SpringAI.service.ChatServiceImplementation;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.web.bind.annotation.*;
@@ -10,9 +11,10 @@ import org.springframework.web.bind.annotation.*;
 public class PromptController {
 
     private final ChatResponse chatResponse;
-
-    public PromptController(ChatResponse chatResponse) {
+    private final ChatServiceImplementation chatServiceImplementation;
+    public PromptController(ChatResponse chatResponse, ChatServiceImplementation chatServiceImplementation) {
         this.chatResponse = chatResponse;
+        this.chatServiceImplementation = chatServiceImplementation;
     }
 
     @GetMapping({"prompt/{userPrompt}"})
@@ -23,5 +25,15 @@ public class PromptController {
         Prompt prompt = promptTemplate.create();
 
         return chatResponse.getResponse(prompt);
+    }
+
+    @GetMapping({"promptTemplate"})
+    public String getPromptTemplateResponse(){
+        return chatServiceImplementation.generateContentUsingPromptTemplate();
+    }
+
+    @GetMapping({"SystemAndPromptTemplate"})
+    public String getSystemAndPromptTemplateResponse(){
+        return chatServiceImplementation.generateContentUsingSystemPromptTemplate();
     }
 }
