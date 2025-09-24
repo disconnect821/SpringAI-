@@ -41,4 +41,8 @@ public class PromptController {
     public Flux<String> getStreamChat(@RequestParam String query){
         return chatServiceImplementation.generateResponseInStream(query);
     }
+    @GetMapping({"memoryChat"})
+    public String getMemoryChat(@RequestParam String query){
+        return chatServiceImplementation.generateNormalResponse(query);
+    }
 }

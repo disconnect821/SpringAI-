@@ -76,4 +76,13 @@ public class ChatResponse {
                 .stream()
                 .content();
     }
+
+    public String generateResponse(String query){
+        return chatClient
+                .prompt()
+                .user(query)
+                .system("You are a friendy person. ")
+                .call()
+                .content();
+    }
 }
