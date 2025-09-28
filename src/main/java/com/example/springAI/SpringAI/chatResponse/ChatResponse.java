@@ -1,7 +1,9 @@
 package com.example.springAI.SpringAI.chatResponse;
 
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -29,11 +31,14 @@ public class ChatResponse {
 
     private final ChatClient chatClient;
 
+    private final VectorStore vectorStore;
+
     //Fetching system message to avoid hardcoding
     @Value("classpath:/prompts/system-message.st")
     private Resource systemMessage;
 
-    public ChatResponse(ChatClient chatClient){
+    public ChatResponse(ChatClient chatClient, VectorStore vectorStore){
+        this.vectorStore = vectorStore;
         this.chatClient = chatClient;
     }
 
@@ -66,6 +71,15 @@ public class ChatResponse {
         return chatClient
                 .prompt()
                 .system(system -> system.text(systemMessage).param("version",8))
+                .user(query)
+                .stream()
+                .content();
+    }
+
+    public Flux<String> streamResponseFromVector(String query) {
+        return chatClient
+                .prompt()
+                .advisors(new QuestionAnswerAdvisor(vectorStore))
                 .user(query)
                 .stream()
                 .content();
