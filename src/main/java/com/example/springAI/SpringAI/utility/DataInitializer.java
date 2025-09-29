@@ -22,7 +22,9 @@ public class DataInitializer {
     @PostConstruct
     public void initData(){
         TextReader textReader = new TextReader(new ClassPathResource("/productData/product.txt"));
-        TokenTextSplitter tokenTextSplitter = new TokenTextSplitter();
+//        TokenTextSplitter tokenTextSplitter = new TokenTextSplitter();
+//        TokenTextSplitter tokenTextSplitter = new TokenTextSplitter(500,30,20,500,false);
+        TokenTextSplitter tokenTextSplitter = new TokenTextSplitter(100,30,10,500,false);
         List<Document> documentList = tokenTextSplitter.split(textReader.get());
 
         vectorStore.add(documentList);

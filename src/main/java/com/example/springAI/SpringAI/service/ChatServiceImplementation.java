@@ -62,6 +62,10 @@ public class ChatServiceImplementation  implements  ChatService{
         return chatResponse.streamResponse(query);
     }
 
+    public Flux<String> generateResponseInStreamFromVector(String query) {
+        return chatResponse.streamResponseFromVector(query);
+    }
+
     public String generateNormalResponse(String query){
         return chatResponse.generateResponse(query);
     }
